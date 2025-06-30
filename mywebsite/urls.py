@@ -6,6 +6,7 @@ app_name = 'cars'
 urlpatterns = [
     # Homepage
     path('', views.homepage, name='homepage'),
+    path('cars/<slug:slug>/', views.car_detail, name='car_detail'),
     
     # AJAX endpoints
     path('ajax/models-by-brand/', views.get_models_by_brand, name='models_by_brand'),

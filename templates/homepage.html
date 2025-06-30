@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- Hero Section Begin -->
-<section class="hero spad set-bg" data-setbg="{% static 'assets/img/hero-bg.jpg' %}" style="padding: 120px 0;">
+<section class="hero spad set-bg" data-setbg="/static/assets/img/hero-bg.jpg" style="padding: 120px 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
@@ -262,7 +262,7 @@
                         <div class="car__item__text__inner">
                             <div class="label-date" style="font-size: 14px; color: #b7b7b7; margin-bottom: 5px;">{{ car.year }}</div>
                             <h5 style="margin-bottom: 15px;">
-                                <a href="#" style="color: #111111; font-weight: 700; line-height: 28px;">
+                                <a href="{% url 'cars:car_detail' slug=car.slug %}" style="color: #111111; font-weight: 700; line-height: 28px;">
                                     {{ car.brand.name }} {{ car.car_model.name }}
                                 </a>
                             </h5>

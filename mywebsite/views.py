@@ -243,6 +243,60 @@ def get_models_by_brand(request):
     
     return JsonResponse({'models': models})
 
+from django.db.models import Prefetch
+def car_detail(request, slug):
+    # Get the car with related data in a single query
+    car = get_object_or_404(
+        Car.objects.select_related(
+            'brand',
+            'car_model',
+            'location'
+        ).prefetch_related(
+            Prefetch('images', queryset=CarImage.objects.order_by('order'))
+        ),
+        slug=slug
+    )
+    
+    # Get rental info if exists
+    rental_info = None
+    if hasattr(car, 'rental_info'):
+        rental_info = car.rental_info
+    
+    # Get similar cars (same brand and model, different years)
+    similar_cars = Car.objects.filter(
+        brand=car.brand,
+        car_model=car.car_model
+    ).exclude(
+        id=car.id
+    ).order_by('-year')[:4]
+    
+    # Get other cars from same location
+    location_cars = Car.objects.filter(
+        location=car.location
+    ).exclude(
+        id=car.id
+    ).order_by('-created_at')[:4]
+    
+    # Get feature categories and features if you have them
+    # (Assuming you might add this later)
+    features = []
+    if car.features:
+        features = [f.strip() for f in car.features.split(',') if f.strip()]
+    
+    # Increment view count
+    car.increment_views()
+    
+    context = {
+        'car': car,
+        'rental_info': rental_info,
+        'similar_cars': similar_cars,
+        'location_cars': location_cars,
+        'features': features,
+        'now': timezone.now(),
+    }
+    
+    return render(request, 'cars/car_detail.html', context)
+
 
 def car_detail_ajax(request, car_id):
     """

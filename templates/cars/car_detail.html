@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- Breadcrumb End -->
+<div class="breadcrumb-option set-bg" data-setbg="{% static 'img/breadcrumb-bg.jpg' %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>{{ car.brand.name }} {{ car.car_model.name }} {{ car.year }}</h2>
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'cars:homepage' %}"><i class="fa fa-home"></i> Home</a>
+                        <a href="#' %}">Car Listing</a>
+                        <span>{{ car.brand.name }} {{ car.car_model.name|lower }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb Begin -->
+
+<!-- Car Details Section Begin -->
+<section class="car-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="car__details__pic">
+                    <div class="car__details__pic__large">
+                        {% with car.images.first as main_image %}
+                        <img class="car-big-img" src="{{ main_image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }}">
+                        {% endwith %}
+                    </div>
+                    <div class="car-thumbs">
+                        <div class="car-thumbs-track car__thumb__slider owl-carousel">
+                            {% for image in car.images.all %}
+                            <div class="ct" data-imgbigurl="{{ image.image.url }}">
+                                <img src="{{ image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }} image {{ forloop.counter }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="car__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Vehicle Overview</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Technical</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Features & Options</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">Vehicle Location</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="car__details__tab__info">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="car__details__tab__info__item">
+                                            <h5>General Information</h5>
+                                            <ul>
+                                                <li><i class="fa fa-check"></i> Year: {{ car.year }}</li>
+                                                <li><i class="fa fa-check"></i> Mileage: {{ car.mileage|intcomma }} km</li>
+                                                <li><i class="fa fa-check"></i> Transmission: {{ car.get_transmission_display }}</li>
+                                                <li><i class="fa fa-check"></i> Fuel Type: {{ car.get_fuel_type_display }}</li>
+                                                <li><i class="fa fa-check"></i> Color: {{ car.color }}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="car__details__tab__info__item">
+                                            <h5>Additional Information</h5>
+                                            <ul>
+                                                <li><i class="fa fa-check"></i> Engine Size: {{ car.engine_size }}L</li>
+                                                <li><i class="fa fa-check"></i> Doors: {{ car.doors }}</li>
+                                                <li><i class="fa fa-check"></i> Seats: {{ car.seats }}</li>
+                                                {% if car.rental_info %}
+                                                <li><i class="fa fa-check"></i> Availability: {{ car.rental_info.get_availability_display }}</li>
+                                                {% else %}
+                                                <li><i class="fa fa-check"></i> Condition: {{ car.get_condition_display }}</li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="car__details__tab__feature">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="car__details__tab__feature__item">
+                                            <h5>Description</h5>
+                                            <p>{{ car.description|linebreaks }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="car__details__tab__feature__item">
+                                            <h5>Key Features</h5>
+                                            <ul>
+                                                {% for feature in car.features.all %}
+                                                <li><i class="fa fa-check-circle"></i> {{ feature.name }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="car__details__tab__info">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="car__details__tab__info__item">
+                                            <h5>Technical Specifications</h5>
+                                            <ul>
+                                                <li><i class="fa fa-check"></i> Engine: {{ car.engine_type }}</li>
+                                                <li><i class="fa fa-check"></i> Horsepower: {{ car.horsepower }} HP</li>
+                                                <li><i class="fa fa-check"></i> Torque: {{ car.torque }} Nm</li>
+                                                <li><i class="fa fa-check"></i> Acceleration (0-100km/h): {{ car.acceleration }}s</li>
+                                                <li><i class="fa fa-check"></i> Top Speed: {{ car.top_speed }} km/h</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="car__details__tab__info__item">
+                                            <h5>Dimensions</h5>
+                                            <ul>
+                                                <li><i class="fa fa-check"></i> Length: {{ car.length }} mm</li>
+                                                <li><i class="fa fa-check"></i> Width: {{ car.width }} mm</li>
+                                                <li><i class="fa fa-check"></i> Height: {{ car.height }} mm</li>
+                                                <li><i class="fa fa-check"></i> Weight: {{ car.weight }} kg</li>
+                                                <li><i class="fa fa-check"></i> Fuel Tank Capacity: {{ car.fuel_tank_capacity }}L</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="car__details__tab__feature">
+                                <div class="row">
+                                    {% for category in feature_categories %}
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="car__details__tab__feature__item">
+                                            <h5>{{ category.name }}</h5>
+                                            <ul>
+                                                {% for feature in car.features.all %}
+                                                    {% if feature.category == category %}
+                                                    <li><i class="fa fa-check-circle"></i> {{ feature.name }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-4" role="tabpanel">
+                            <div class="car__details__tab__info">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="car__details__tab__info__item">
+                                            <h5>Vehicle Location</h5>
+                                            <p><i class="fa fa-map-marker"></i> {{ car.location.name }}, {{ car.location.county }}</p>
+                                            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="car__details__sidebar">
+                    <div class="car__details__sidebar__model">
+                        <ul>
+                            <li>Stock # <span>{{ car.stock_number }}</span></li>
+                            <li>VIN <span>{{ car.vin }}</span></li>
+                        </ul>
+                        {% if car.rental_info %}
+                            <a href="#" class="primary-btn">Rent This Vehicle</a>
+                            <p>Daily Rate: KES {{ car.rental_info.daily_rate|intcomma }}</p>
+                        {% else %}
+                            <a href="#" class="primary-btn">Get Today's Price</a>
+                            <p>Price: KES {{ car.price|intcomma }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="car__details__sidebar__payment">
+                        <ul>
+                            {% if car.rental_info %}
+                                <li>Daily Rate <span>KES {{ car.rental_info.daily_rate|intcomma }}</span></li>
+                                <li>Weekly Rate <span>KES {{ car.rental_info.weekly_rate|intcomma }}</span></li>
+                                <li>Monthly Rate <span>KES {{ car.rental_info.monthly_rate|intcomma }}</span></li>
+                                <a href="{% url 'cars:rental_inquiry' car.slug %}" class="primary-btn"><i class="fa fa-calendar"></i> Book Now</a>
+                            {% else %}
+                                <li>Price <span>KES {{ car.price|intcomma }}</span></li>
+                                {% if car.discount_price %}
+                                <li>Discount <span>KES {{ car.discount_price|intcomma }}</span></li>
+                                <li>You Save <span>KES {{ car.get_discount_amount|intcomma }}</span></li>
+                                {% endif %}
+                                <a href="#" class="primary-btn"><i class="fa fa-credit-card"></i> Express Purchase</a>
+                                <a href="#" class="primary-btn sidebar-btn"><i class="fa fa-car"></i> Schedule Test Drive</a>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Car Details Section End -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Image gallery functionality
+    $('.car-thumbs-track .ct').on('click', function () {
+        $('.car-thumbs-track .ct').removeClass('active');
+        var imgbigurl = $(this).data('imgbigurl');
+        $(this).addClass('active');
+        $('.car-big-img').attr('src', imgbigurl);
+    });
+
+    // Initialize Owl Carousel for thumbnails
+    $('.car__thumb__slider').owlCarousel({
+        items: 4,
+        loop: false,
+        margin: 10,
+        nav: true,
+        dots: false
+    });
+
+    // Initialize map (example using Google Maps)
+    function initMap() {
+        var location = { lat: {{ car.location.latitude }}, lng: {{ car.location.longitude }} };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+</script>
+{% if car.location.latitude and car.location.longitude %}
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+{% endif %}
+{% endblock %}
