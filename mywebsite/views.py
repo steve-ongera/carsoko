@@ -30,16 +30,17 @@ def homepage(request):
     ).prefetch_related('images')
     
     # Get featured cars (limit to 8 for homepage display)
-    featured_cars = available_cars.filter(is_featured=True)[:8]
+    featured_cars = list(available_cars.filter(is_featured=True)[:8])
     
     # If not enough featured cars, fill with recent cars
-    if featured_cars.count() < 8:
-        additional_cars = available_cars.exclude(
-            id__in=[car.id for car in featured_cars]
-        ).order_by('-created_at')[:8 - featured_cars.count()]
+    if len(featured_cars) < 8:
+        featured_car_ids = [car.id for car in featured_cars]
+        additional_cars = list(available_cars.exclude(
+            id__in=featured_car_ids
+        ).order_by('-created_at')[:8 - len(featured_cars)])
         
         # Combine featured and additional cars
-        homepage_cars = list(featured_cars) + list(additional_cars)
+        homepage_cars = featured_cars + additional_cars
     else:
         homepage_cars = featured_cars
     
@@ -49,17 +50,21 @@ def homepage(request):
     
     for car in homepage_cars:
         # Check if car has rental info
-        if hasattr(car, 'rental_info'):
-            cars_for_rent.append(car)
-        else:
+        try:
+            if hasattr(car, 'rental_info') and car.rental_info:
+                cars_for_rent.append(car)
+            else:
+                cars_for_sale.append(car)
+        except CarRental.DoesNotExist:
             cars_for_sale.append(car)
     
     # Get filter options for search forms
     # Years (from cars in database)
-    years = Car.objects.values_list('year', flat=True).distinct().order_by('-year')
+    years = list(Car.objects.values_list('year', flat=True).distinct().order_by('-year'))
     
+    # Fix the brand filter - use correct relationship
     brands = Brand.objects.filter(
-        car__status='available'
+        car__status='available'  # Use 'car' instead of 'car_set' since you have brand FK on Car model
     ).distinct().order_by('name')
     
     # Get popular models (with car count)
@@ -96,15 +101,31 @@ def homepage(request):
     # Car statistics for display
     car_stats = {
         'total_cars': available_cars.count(),
-        'cars_for_sale': Car.objects.filter(status='available').exclude(rental_info__isnull=False).count(),
-        'cars_for_rent': Car.objects.filter(status='available', rental_info__isnull=False).count(),
+        'cars_for_sale': Car.objects.filter(
+            status='available'
+        ).exclude(
+            id__in=Car.objects.filter(rental_info__isnull=False).values_list('id', flat=True)
+        ).count(),
+        'cars_for_rent': Car.objects.filter(
+            status='available', 
+            rental_info__isnull=False
+        ).count(),
         'total_brands': brands.count(),
     }
     
     # Process search if GET parameters are present
     search_results = None
     if request.GET.get('search'):
-        search_results = process_car_search(request)
+        # You'll need to implement this function
+        # search_results = process_car_search(request)
+        pass
+    
+    # Debug information - remove this in production
+    print(f"Total available cars: {available_cars.count()}")
+    print(f"Featured cars: {len(featured_cars)}")
+    print(f"Homepage cars: {len(homepage_cars)}")
+    print(f"Cars for sale: {len(cars_for_sale)}")
+    print(f"Cars for rent: {len(cars_for_rent)}")
     
     context = {
         'business_config': business_config,

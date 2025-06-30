@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- Hero Section Begin -->
-<section class="hero spad set-bg" data-setbg="{% static 'img/hero-bg.jpg' %}">
+<section class="hero spad set-bg" data-setbg="{% static 'assets/img/hero-bg.jpg' %}" style="padding: 120px 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
@@ -28,35 +28,35 @@
                         {% endif %}
                     </div>
                     {% if homepage_cars.0 %}
-                        <a href="#" class="primary-btn car-inquiry-btn" data-car-id="{{ homepage_cars.0.id }}">
-                            <img src="{% static 'img/wheel.png' %}" alt=""> Inquire Now
+                        <a href="#" class="primary-btn car-inquiry-btn" data-car-id="{{ homepage_cars.0.id }}" style="display: inline-block; font-size: 14px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 50px; margin-right: 15px;">
+                            <img src="{% static 'src/img/wheel.png' %}" alt=""> Inquire Now
                         </a>
-                        <a href="#" class="primary-btn more-btn car-detail-btn" data-car-id="{{ homepage_cars.0.id }}">Learn More</a>
+                        <a href="#" class="primary-btn more-btn car-detail-btn" data-car-id="{{ homepage_cars.0.id }}" style="display: inline-block; font-size: 14px; color: #111111; background: transparent; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 50px; border: 2px solid #111111;">Learn More</a>
                     {% endif %}
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="hero__tab">
-                    <ul class="nav nav-tabs" role="tablist">
+                <div class="hero__tab" style="background: #ffffff; padding: 30px; border-radius: 5px;">
+                    <ul class="nav nav-tabs" role="tablist" style="border-bottom: none; margin-bottom: 30px;">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Car Rental</a>
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab" style="font-size: 16px; color: #111111; font-weight: 700; padding: 0 20px 10px; margin-right: 15px; border-bottom: 2px solid #111111;">Car Rental</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Buy Car</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab" style="font-size: 16px; color: #b7b7b7; font-weight: 700; padding: 0 20px 10px; margin-right: 15px;">Buy Car</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <!-- Car Rental Search Form -->
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="hero__tab__form">
-                                <h2>Find Your Rental Car</h2>
+                                <h2 style="color: #111111; font-weight: 700; margin-bottom: 25px;">Find Your Rental Car</h2>
                                 <form method="GET" action="{% url 'cars:homepage' %}" id="rental-search-form">
                                     <input type="hidden" name="car_type" value="rental">
                                     <input type="hidden" name="search" value="1">
-                                    <div class="select-list">
-                                        <div class="select-list-item">
-                                            <p>Select Year</p>
-                                            <select name="year">
+                                    <div class="select-list" style="margin-bottom: 25px;">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Year</p>
+                                            <select name="year" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Year</option>
                                                 {% for year in years %}
                                                     <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>
@@ -65,9 +65,9 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Brand</p>
-                                            <select name="brand" id="brand-select-rental">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Brand</p>
+                                            <select name="brand" id="brand-select-rental" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Brand</option>
                                                 {% for brand in brands %}
                                                     <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:"s" %}selected{% endif %}>
@@ -76,16 +76,16 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Model</p>
-                                            <select name="model" id="model-select-rental">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Model</p>
+                                            <select name="model" id="model-select-rental" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Model</option>
                                                 <!-- Models will be populated via AJAX -->
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Location</p>
-                                            <select name="location">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Location</p>
+                                            <select name="location" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Any Location</option>
                                                 {% for location in locations %}
                                                     <option value="{{ location.id }}" {% if request.GET.location == location.id|stringformat:"s" %}selected{% endif %}>
@@ -95,18 +95,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="car-price">
-                                        <p>Daily Rate Range (KES):</p>
+                                    <div class="car-price" style="margin-bottom: 25px;">
+                                        <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Daily Rate Range (KES):</p>
                                         <div class="price-range-wrap">
                                             <div class="range-inputs">
                                                 <input type="number" name="min_price" placeholder="Min Price" 
-                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; display: inline-block;">
+                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; height: 40px; border: 1px solid #e1e1e1; padding-left: 15px; font-size: 14px; color: #b7b7b7; display: inline-block;">
                                                 <input type="number" name="max_price" placeholder="Max Price" 
-                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; display: inline-block; margin-left: 4%;">
+                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; height: 40px; border: 1px solid #e1e1e1; padding-left: 15px; font-size: 14px; color: #b7b7b7; display: inline-block; margin-left: 4%;">
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="submit" class="site-btn">Search Rentals</button>
+                                    <button type="submit" class="site-btn" style="display: block; width: 100%; font-size: 14px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 0; border-radius: 50px; border: none;">Search Rentals</button>
                                 </form>
                             </div>
                         </div>
@@ -114,14 +114,14 @@
                         <!-- Car Purchase Search Form -->
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="hero__tab__form">
-                                <h2>Buy Your Dream Car</h2>
+                                <h2 style="color: #111111; font-weight: 700; margin-bottom: 25px;">Buy Your Dream Car</h2>
                                 <form method="GET" action="{% url 'cars:homepage' %}" id="purchase-search-form">
                                     <input type="hidden" name="car_type" value="sale">
                                     <input type="hidden" name="search" value="1">
-                                    <div class="select-list">
-                                        <div class="select-list-item">
-                                            <p>Select Year</p>
-                                            <select name="year">
+                                    <div class="select-list" style="margin-bottom: 25px;">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Year</p>
+                                            <select name="year" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Year</option>
                                                 {% for year in years %}
                                                     <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>
@@ -130,9 +130,9 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Brand</p>
-                                            <select name="brand" id="brand-select-purchase">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Brand</p>
+                                            <select name="brand" id="brand-select-purchase" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Brand</option>
                                                 {% for brand in brands %}
                                                     <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:"s" %}selected{% endif %}>
@@ -141,16 +141,16 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Model</p>
-                                            <select name="model" id="model-select-purchase">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Model</p>
+                                            <select name="model" id="model-select-purchase" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Select Model</option>
                                                 <!-- Models will be populated via AJAX -->
                                             </select>
                                         </div>
-                                        <div class="select-list-item">
-                                            <p>Select Condition</p>
-                                            <select name="condition">
+                                        <div class="select-list-item" style="margin-bottom: 20px;">
+                                            <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Select Condition</p>
+                                            <select name="condition" style="width: 100%; height: 50px; border: 1px solid #e1e1e1; padding-left: 20px; font-size: 14px; color: #b7b7b7;">
                                                 <option value="">Any Condition</option>
                                                 <option value="new">Brand New</option>
                                                 <option value="used_local">Used (Local)</option>
@@ -158,18 +158,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="car-price">
-                                        <p>Price Range (KES):</p>
+                                    <div class="car-price" style="margin-bottom: 25px;">
+                                        <p style="font-size: 14px; color: #b7b7b7; margin-bottom: 10px;">Price Range (KES):</p>
                                         <div class="price-range-wrap">
                                             <div class="range-inputs">
                                                 <input type="number" name="min_price" placeholder="Min Price" 
-                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; display: inline-block;">
+                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; height: 40px; border: 1px solid #e1e1e1; padding-left: 15px; font-size: 14px; color: #b7b7b7; display: inline-block;">
                                                 <input type="number" name="max_price" placeholder="Max Price" 
-                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; display: inline-block; margin-left: 4%;">
+                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; height: 40px; border: 1px solid #e1e1e1; padding-left: 15px; font-size: 14px; color: #b7b7b7; display: inline-block; margin-left: 4%;">
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="submit" class="site-btn">Search Cars</button>
+                                    <button type="submit" class="site-btn" style="display: block; width: 100%; font-size: 14px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 0; border-radius: 50px; border: none;">Search Cars</button>
                                 </form>
                             </div>
                         </div>
@@ -181,53 +181,205 @@
 </section>
 <!-- Hero Section End -->
 
-<!-- Services Section Begin -->
-<section class="services spad">
+<!-- Car Statistics Section Begin -->
+<section class="car-stats spad" style="padding: 70px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="car-stats-item" style="text-align: center; padding: 30px 20px;">
+                    <h3 style="font-size: 36px; font-weight: bold; color: #111111; margin-bottom: 10px;">{{ car_stats.total_cars }}</h3>
+                    <p style="font-size: 14px; color: #b7b7b7;">Total Cars Available</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="car-stats-item" style="text-align: center; padding: 30px 20px;">
+                    <h3 style="font-size: 36px; font-weight: bold; color: #111111; margin-bottom: 10px;">{{ car_stats.cars_for_sale }}</h3>
+                    <p style="font-size: 14px; color: #b7b7b7;">Cars for Sale</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="car-stats-item" style="text-align: center; padding: 30px 20px;">
+                    <h3 style="font-size: 36px; font-weight: bold; color: #111111; margin-bottom: 10px;">{{ car_stats.cars_for_rent }}</h3>
+                    <p style="font-size: 14px; color: #b7b7b7;">Cars for Rent</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="car-stats-item" style="text-align: center; padding: 30px 20px;">
+                    <h3 style="font-size: 36px; font-weight: bold; color: #111111; margin-bottom: 10px;">{{ car_stats.total_brands }}</h3>
+                    <p style="font-size: 14px; color: #b7b7b7;">Car Brands</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Car Statistics Section End -->
+
+<!-- Featured Cars Section Begin -->
+{% if homepage_cars %}
+<section class="featured-cars spad" style="padding: 70px 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="section-title">
-                    <span>Our Services</span>
-                    <h2>What We Offer</h2>
+                <div class="section-title" style="text-align: center; margin-bottom: 50px;">
+                    <span style="font-size: 14px; color: #b7b7b7; text-transform: uppercase; letter-spacing: 2px;">Featured Cars</span>
+                    <h2 style="color: #111111; font-weight: 700; margin-top: 10px; margin-bottom: 15px;">Premium Vehicles</h2>
+                    <p style="font-size: 16px; color: #6d6d6d; margin-bottom: 0;">Discover our handpicked selection of premium vehicles available for sale and rent</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for car in homepage_cars %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="car__item" style="margin-bottom: 30px;">
+                    <div class="car__item__pic" style="position: relative; height: 200px; overflow: hidden;">
+                        {% if car.images.all %}
+                            {% with car.images.first as primary_image %}
+                            <img src="{{ primary_image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }}" 
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                            {% endwith %}
+                        {% else %}
+                            <img src="{% static 'img/car-placeholder.jpg' %}" alt="{{ car.brand.name }} {{ car.car_model.name }}" 
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                        {% endif %}
+                        
+                        <!-- Car Status Badge -->
+                        <div class="car-status-badge" style="position: absolute; top: 10px; left: 10px;">
+                            {% if car.rental_info %}
+                                <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
+                            {% else %}
+                                <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if car.is_featured %}
+                            <div class="featured-badge" style="position: absolute; top: 10px; right: 10px; background: #ffc107; color: #000; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                <span>Featured</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="car__item__text" style="padding: 25px 20px 20px; background: #ffffff;">
+                        <div class="car__item__text__inner">
+                            <div class="label-date" style="font-size: 14px; color: #b7b7b7; margin-bottom: 5px;">{{ car.year }}</div>
+                            <h5 style="margin-bottom: 15px;">
+                                <a href="#" style="color: #111111; font-weight: 700; line-height: 28px;">
+                                    {{ car.brand.name }} {{ car.car_model.name }}
+                                </a>
+                            </h5>
+                            <ul style="border-bottom: 1px solid #e1e1e1; padding-bottom: 15px; margin-bottom: 15px;">
+                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7; margin-right: 15px;">
+                                    <span>{{ car.mileage|intcomma }}</span> km
+                                </li>
+                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7; margin-right: 15px;">
+                                    {{ car.get_transmission_display }}
+                                </li>
+                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7;">
+                                    {{ car.get_fuel_type_display }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="car__item__price">
+                            {% if car.rental_info %}
+                                <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
+                                <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
+                                    KES {{ car.rental_info.daily_rate|floatformat:0|intcomma }}<span style="font-size: 14px; color: #b7b7b7;">/Day</span>
+                                </h6>
+                                {% if car.rental_info.weekly_rate %}
+                                    <small style="display: block; color: #666; font-size: 12px;">
+                                        Weekly: KES {{ car.rental_info.weekly_rate|floatformat:0|intcomma }}
+                                    </small>
+                                {% endif %}
+                            {% else %}
+                                <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
+                                <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
+                                    KES {{ car.price|floatformat:0|intcomma }}
+                                </h6>
+                                {% if car.negotiable %}
+                                    <small class="negotiable" style="display: block; color: #666; font-size: 12px;">
+                                        Negotiable
+                                    </small>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- View All Cars Button -->
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <a href="#" class="primary-btn" style="display: inline-block; font-size: 14px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 50px; margin-top: 20px;">View All Cars</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- No Cars Message -->
+<section class="no-cars spad" style="padding: 70px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="no-cars-message" style="padding: 50px 20px;">
+                    <h3 style="color: #111111; font-weight: 700; margin-bottom: 15px;">No Cars Available</h3>
+                    <p style="font-size: 16px; color: #6d6d6d; margin-bottom: 25px;">We're currently updating our inventory. Please check back soon for new arrivals!</p>
+                    <a href="#" class="primary-btn" style="display: inline-block; font-size: 14px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 50px;">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- Featured Cars Section End -->
+
+<!-- Services Section Begin -->
+<section class="services spad" style="padding: 70px 0; background: #f8f6f0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title" style="text-align: center; margin-bottom: 50px;">
+                    <span style="font-size: 14px; color: #b7b7b7; text-transform: uppercase; letter-spacing: 2px;">Our Services</span>
+                    <h2 style="color: #111111; font-weight: 700; margin-top: 10px; margin-bottom: 15px;">What We Offer</h2>
                     {% if business_config %}
-                        <p>{{ business_config.website_description|truncatewords:20 }}</p>
+                        <p style="font-size: 16px; color: #6d6d6d; margin-bottom: 0;">{{ business_config.website_description|truncatewords:20 }}</p>
                     {% else %}
-                        <p>Find the perfect car for your needs with our comprehensive automotive services</p>
+                        <p style="font-size: 16px; color: #6d6d6d; margin-bottom: 0;">Find the perfect car for your needs with our comprehensive automotive services</p>
                     {% endif %}
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="services__item">
-                    <img src="{% static 'img/services/services-1.png' %}" alt="">
-                    <h5>Car Rental</h5>
-                    <p>Rent premium vehicles for short or long-term needs. Daily, weekly, and monthly rates available with flexible terms.</p>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                <div class="services__item" style="text-align: center; padding: 40px 30px; background: #ffffff; margin-bottom: 30px; transition: all 0.3s;">
+                    <img src="{% static 'img/services/services-1.png' %}" alt="" style="margin-bottom: 25px;">
+                    <h5 style="color: #111111; font-weight: 700; margin-bottom: 15px;">Car Rental</h5>
+                    <p style="font-size: 14px; color: #6d6d6d; margin-bottom: 20px;">Rent premium vehicles for short or long-term needs. Daily, weekly, and monthly rates available with flexible terms.</p>
+                    <a href="#" style="display: inline-block; height: 40px; width: 40px; background: #f8f6f0; border-radius: 50%; line-height: 40px; text-align: center;"><i class="fa fa-long-arrow-right" style="color: #111111;"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="services__item">
-                    <img src="{% static 'img/services/services-2.png' %}" alt="">
-                    <h5>Car Sales</h5>
-                    <p>Browse our extensive collection of new and used vehicles. Quality assured cars with transparent pricing and negotiable terms.</p>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                <div class="services__item" style="text-align: center; padding: 40px 30px; background: #ffffff; margin-bottom: 30px; transition: all 0.3s;">
+                    <img src="{% static 'img/services/services-2.png' %}" alt="" style="margin-bottom: 25px;">
+                    <h5 style="color: #111111; font-weight: 700; margin-bottom: 15px;">Car Sales</h5>
+                    <p style="font-size: 14px; color: #6d6d6d; margin-bottom: 20px;">Browse our extensive collection of new and used vehicles. Quality assured cars with transparent pricing and negotiable terms.</p>
+                    <a href="#" style="display: inline-block; height: 40px; width: 40px; background: #f8f6f0; border-radius: 50%; line-height: 40px; text-align: center;"><i class="fa fa-long-arrow-right" style="color: #111111;"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="services__item">
-                    <img src="{% static 'img/services/services-3.png' %}" alt="">
-                    <h5>Car Financing</h5>
-                    <p>Flexible financing options to help you own your dream car. Competitive rates and quick approval process.</p>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                <div class="services__item" style="text-align: center; padding: 40px 30px; background: #ffffff; margin-bottom: 30px; transition: all 0.3s;">
+                    <img src="{% static 'img/services/services-3.png' %}" alt="" style="margin-bottom: 25px;">
+                    <h5 style="color: #111111; font-weight: 700; margin-bottom: 15px;">Car Financing</h5>
+                    <p style="font-size: 14px; color: #6d6d6d; margin-bottom: 20px;">Flexible financing options to help you own your dream car. Competitive rates and quick approval process.</p>
+                    <a href="#" style="display: inline-block; height: 40px; width: 40px; background: #f8f6f0; border-radius: 50%; line-height: 40px; text-align: center;"><i class="fa fa-long-arrow-right" style="color: #111111;"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="services__item">
-                    <img src="{% static 'img/services/services-4.png' %}" alt="">
-                    <h5>24/7 Support</h5>
-                    <p>Round-the-clock customer support for all your automotive needs. We're here to help whenever you need us.</p>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                <div class="services__item" style="text-align: center; padding: 40px 30px; background: #ffffff; margin-bottom: 30px; transition: all 0.3s;">
+                    <img src="{% static 'img/services/services-4.png' %}" alt="" style="margin-bottom: 25px;">
+                    <h5 style="color: #111111; font-weight: 700; margin-bottom: 15px;">24/7 Support</h5>
+                    <p style="font-size: 14px; color: #6d6d6d; margin-bottom: 20px;">Round-the-clock customer support for all your automotive needs. We're here to help whenever you need us.</p>
+                    <a href="#" style="display: inline-block; height: 40px; width: 40px; background: #f8f6f0; border-radius: 50%; line-height: 40px; text-align: center;"><i class="fa fa-long-arrow-right" style="color: #111111;"></i></a>
                 </div>
             </div>
         </div>
@@ -235,131 +387,61 @@
 </section>
 <!-- Services Section End -->
 
-<
-<!-- Chooseus Section Begin -->
-<section class="chooseus spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="chooseus__text">
-                    <div class="section-title">
-                        <h2>Why People Choose Us</h2>
-                        <p>Duis aute irure dolorin reprehenderits volupta velit dolore fugiat nulla pariatur
-                            excepteur sint occaecat cupidatat.</p>
-                    </div>
-                    <ul>
-                        <li><i class="fa fa-check-circle"></i> Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit.</li>
-                        <li><i class="fa fa-check-circle"></i> Integer et nisl et massa tempor ornare vel id orci.
-                        </li>
-                        <li><i class="fa fa-check-circle"></i> Nunc consectetur ligula vitae nisl placerat tempus.
-                        </li>
-                        <li><i class="fa fa-check-circle"></i> Curabitur quis ante vitae lacus varius pretium.</li>
-                    </ul>
-                    <a href="#" class="primary-btn">About Us</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="chooseus__video set-bg">
-        <img src="img/chooseus-video.png" alt="">
-        <a href="https://www.youtube.com/watch?v=Xd0Ok-MkqoE"
-            class="play-btn video-popup"><i class="fa fa-play"></i></a>
-    </div>
-</section>
-<!-- Chooseus Section End -->
-
-<!-- Latest Blog Section Begin -->
-<section class="latest spad">
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="testimonials spad" style="padding: 70px 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="section-title">
-                    <span>Our Blog</span>
-                    <h2>Latest News Updates</h2>
-                    <p>Sign up for the latest Automobile Industry information and more. Duis aute<br /> irure
-                        dolorin reprehenderits volupta velit dolore fugiat.</p>
+                <div class="section-title" style="text-align: center; margin-bottom: 50px;">
+                    <span style="font-size: 14px; color: #b7b7b7; text-transform: uppercase; letter-spacing: 2px;">Testimonials</span>
+                    <h2 style="color: #111111; font-weight: 700; margin-top: 10px; margin-bottom: 15px;">What Our Customers Say</h2>
                 </div>
             </div>
         </div>
         <div class="row">
+            {% for testimonial in testimonials %}
             <div class="col-lg-4 col-md-6">
-                <div class="latest__blog__item">
-                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-1.jpg">
-                        <ul>
-                            <li>By Polly Williams</li>
-                            <li>Dec 19, 2018</li>
-                            <li>Comment</li>
-                        </ul>
+                <div class="testimonial-item" style="background: #ffffff; padding: 30px; margin-bottom: 30px;">
+                    <div class="testimonial-rating" style="margin-bottom: 15px;">
+                        {% for i in "12345" %}
+                            {% if i|add:0 <= testimonial.rating %}
+                                <i class="fa fa-star" style="color: #f8d64e;"></i>
+                            {% else %}
+                                <i class="fa fa-star-o" style="color: #f8d64e;"></i>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <div class="latest__blog__item__text">
-                        <h5>Benjamin Franklin S Method Of Habit Formation</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
-                            facilisis.</p>
-                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
+                    <p style="font-size: 16px; color: #6d6d6d; font-style: italic; margin-bottom: 20px;">"{{ testimonial.message|truncatewords:20 }}"</p>
+                    <div class="testimonial-author">
+                        <h6 style="color: #111111; font-weight: 700; margin-bottom: 5px;">{{ testimonial.customer_name }}</h6>
+                        {% if testimonial.customer_location %}
+                            <span style="font-size: 14px; color: #b7b7b7;">{{ testimonial.customer_location }}</span>
+                        {% endif %}
+                        {% if testimonial.car_purchased %}
+                            <small style="display: block; font-size: 12px; color: #6d6d6d; margin-top: 5px;">Purchased: {{ testimonial.car_purchased.brand.name }} {{ testimonial.car_purchased.car_model.name }}</small>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="latest__blog__item">
-                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-2.jpg">
-                        <ul>
-                            <li>By Mattie Ramirez</li>
-                            <li>Dec 19, 2018</li>
-                            <li>Comment</li>
-                        </ul>
-                    </div>
-                    <div class="latest__blog__item__text">
-                        <h5>How To Set Intentions That Energize You</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
-                            facilisis.</p>
-                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="latest__blog__item">
-                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-3.jpg">
-                        <ul>
-                            <li>By Nicholas Brewer</li>
-                            <li>Dec 19, 2018</li>
-                            <li>Comment</li>
-                        </ul>
-                    </div>
-                    <div class="latest__blog__item__text">
-                        <h5>Burning Desire Golden Key Or Red Herring</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
-                            facilisis.</p>
-                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
-<!-- Latest Blog Section End -->
+{% endif %}
 
-<!-- Cta Begin -->
-<div class="cta">
+<!-- Debug Section (Remove in production) -->
+{% if debug %}
+<section class="debug-info" style="background: #f8f9fa; padding: 20px;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="cta__item set-bg" data-setbg="img/cta/cta-1.jpg">
-                    <h4>Do You Want To Buy A Car</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="cta__item set-bg" data-setbg="img/cta/cta-2.jpg">
-                    <h4>Do You Want To Rent A Car</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
-                </div>
-            </div>
-        </div>
+        <h4>Debug Information</h4>
+        <p>Total homepage cars: {{ homepage_cars|length }}</p>
+        <p>Cars for sale: {{ cars_for_sale|length }}</p>
+        <p>Cars for rent: {{ cars_for_rent|length }}</p>
+        <p>Total brands: {{ brands|length }}</p>
+        <p>Available years: {{ years|length }}</p>
     </div>
-</div>
-<!-- Cta End -->
+</section>
+{% endif %}
+
 {% endblock %}
