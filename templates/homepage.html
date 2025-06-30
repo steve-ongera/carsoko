@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- Hero Section Begin -->
+<section class="hero spad set-bg" data-setbg="{% static 'img/hero-bg.jpg' %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="hero__text">
+                    <div class="hero__text__title">
+                        <span>FIND YOUR DREAM CAR</span>
+                        {% if homepage_cars.0 %}
+                            <h2>{{ homepage_cars.0.brand.name }} {{ homepage_cars.0.car_model.name }}</h2>
+                        {% else %}
+                            <h2>Premium Cars Available</h2>
+                        {% endif %}
+                    </div>
+                    <div class="hero__text__price">
+                        {% if homepage_cars.0 %}
+                            <div class="car-model">Model {{ homepage_cars.0.year }}</div>
+                            {% if homepage_cars.0.rental_info %}
+                                <h2>KES {{ homepage_cars.0.rental_info.daily_rate|floatformat:0|intcomma }}<span>/Day</span></h2>
+                            {% else %}
+                                <h2>KES {{ homepage_cars.0.price|floatformat:0|intcomma }}</h2>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {% if homepage_cars.0 %}
+                        <a href="#" class="primary-btn car-inquiry-btn" data-car-id="{{ homepage_cars.0.id }}">
+                            <img src="{% static 'img/wheel.png' %}" alt=""> Inquire Now
+                        </a>
+                        <a href="#" class="primary-btn more-btn car-detail-btn" data-car-id="{{ homepage_cars.0.id }}">Learn More</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Car Rental</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Buy Car</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Car Rental Search Form -->
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="hero__tab__form">
+                                <h2>Find Your Rental Car</h2>
+                                <form method="GET" action="{% url 'cars:homepage' %}" id="rental-search-form">
+                                    <input type="hidden" name="car_type" value="rental">
+                                    <input type="hidden" name="search" value="1">
+                                    <div class="select-list">
+                                        <div class="select-list-item">
+                                            <p>Select Year</p>
+                                            <select name="year">
+                                                <option value="">Select Year</option>
+                                                {% for year in years %}
+                                                    <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>
+                                                        {{ year }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Brand</p>
+                                            <select name="brand" id="brand-select-rental">
+                                                <option value="">Select Brand</option>
+                                                {% for brand in brands %}
+                                                    <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:"s" %}selected{% endif %}>
+                                                        {{ brand.name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Model</p>
+                                            <select name="model" id="model-select-rental">
+                                                <option value="">Select Model</option>
+                                                <!-- Models will be populated via AJAX -->
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Location</p>
+                                            <select name="location">
+                                                <option value="">Any Location</option>
+                                                {% for location in locations %}
+                                                    <option value="{{ location.id }}" {% if request.GET.location == location.id|stringformat:"s" %}selected{% endif %}>
+                                                        {{ location.name }}, {{ location.county }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="car-price">
+                                        <p>Daily Rate Range (KES):</p>
+                                        <div class="price-range-wrap">
+                                            <div class="range-inputs">
+                                                <input type="number" name="min_price" placeholder="Min Price" 
+                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; display: inline-block;">
+                                                <input type="number" name="max_price" placeholder="Max Price" 
+                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; display: inline-block; margin-left: 4%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="site-btn">Search Rentals</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Car Purchase Search Form -->
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="hero__tab__form">
+                                <h2>Buy Your Dream Car</h2>
+                                <form method="GET" action="{% url 'cars:homepage' %}" id="purchase-search-form">
+                                    <input type="hidden" name="car_type" value="sale">
+                                    <input type="hidden" name="search" value="1">
+                                    <div class="select-list">
+                                        <div class="select-list-item">
+                                            <p>Select Year</p>
+                                            <select name="year">
+                                                <option value="">Select Year</option>
+                                                {% for year in years %}
+                                                    <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>
+                                                        {{ year }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Brand</p>
+                                            <select name="brand" id="brand-select-purchase">
+                                                <option value="">Select Brand</option>
+                                                {% for brand in brands %}
+                                                    <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:"s" %}selected{% endif %}>
+                                                        {{ brand.name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Model</p>
+                                            <select name="model" id="model-select-purchase">
+                                                <option value="">Select Model</option>
+                                                <!-- Models will be populated via AJAX -->
+                                            </select>
+                                        </div>
+                                        <div class="select-list-item">
+                                            <p>Select Condition</p>
+                                            <select name="condition">
+                                                <option value="">Any Condition</option>
+                                                <option value="new">Brand New</option>
+                                                <option value="used_local">Used (Local)</option>
+                                                <option value="used_foreign">Used (Import)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="car-price">
+                                        <p>Price Range (KES):</p>
+                                        <div class="price-range-wrap">
+                                            <div class="range-inputs">
+                                                <input type="number" name="min_price" placeholder="Min Price" 
+                                                       value="{{ request.GET.min_price }}" class="form-control" style="width: 48%; display: inline-block;">
+                                                <input type="number" name="max_price" placeholder="Max Price" 
+                                                       value="{{ request.GET.max_price }}" class="form-control" style="width: 48%; display: inline-block; margin-left: 4%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="site-btn">Search Cars</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- Services Section Begin -->
+<section class="services spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Our Services</span>
+                    <h2>What We Offer</h2>
+                    {% if business_config %}
+                        <p>{{ business_config.website_description|truncatewords:20 }}</p>
+                    {% else %}
+                        <p>Find the perfect car for your needs with our comprehensive automotive services</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="services__item">
+                    <img src="{% static 'img/services/services-1.png' %}" alt="">
+                    <h5>Car Rental</h5>
+                    <p>Rent premium vehicles for short or long-term needs. Daily, weekly, and monthly rates available with flexible terms.</p>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="services__item">
+                    <img src="{% static 'img/services/services-2.png' %}" alt="">
+                    <h5>Car Sales</h5>
+                    <p>Browse our extensive collection of new and used vehicles. Quality assured cars with transparent pricing and negotiable terms.</p>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="services__item">
+                    <img src="{% static 'img/services/services-3.png' %}" alt="">
+                    <h5>Car Financing</h5>
+                    <p>Flexible financing options to help you own your dream car. Competitive rates and quick approval process.</p>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="services__item">
+                    <img src="{% static 'img/services/services-4.png' %}" alt="">
+                    <h5>24/7 Support</h5>
+                    <p>Round-the-clock customer support for all your automotive needs. We're here to help whenever you need us.</p>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Services Section End -->
+
+<
+<!-- Chooseus Section Begin -->
+<section class="chooseus spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="chooseus__text">
+                    <div class="section-title">
+                        <h2>Why People Choose Us</h2>
+                        <p>Duis aute irure dolorin reprehenderits volupta velit dolore fugiat nulla pariatur
+                            excepteur sint occaecat cupidatat.</p>
+                    </div>
+                    <ul>
+                        <li><i class="fa fa-check-circle"></i> Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit.</li>
+                        <li><i class="fa fa-check-circle"></i> Integer et nisl et massa tempor ornare vel id orci.
+                        </li>
+                        <li><i class="fa fa-check-circle"></i> Nunc consectetur ligula vitae nisl placerat tempus.
+                        </li>
+                        <li><i class="fa fa-check-circle"></i> Curabitur quis ante vitae lacus varius pretium.</li>
+                    </ul>
+                    <a href="#" class="primary-btn">About Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chooseus__video set-bg">
+        <img src="img/chooseus-video.png" alt="">
+        <a href="https://www.youtube.com/watch?v=Xd0Ok-MkqoE"
+            class="play-btn video-popup"><i class="fa fa-play"></i></a>
+    </div>
+</section>
+<!-- Chooseus Section End -->
+
+<!-- Latest Blog Section Begin -->
+<section class="latest spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Our Blog</span>
+                    <h2>Latest News Updates</h2>
+                    <p>Sign up for the latest Automobile Industry information and more. Duis aute<br /> irure
+                        dolorin reprehenderits volupta velit dolore fugiat.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="latest__blog__item">
+                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-1.jpg">
+                        <ul>
+                            <li>By Polly Williams</li>
+                            <li>Dec 19, 2018</li>
+                            <li>Comment</li>
+                        </ul>
+                    </div>
+                    <div class="latest__blog__item__text">
+                        <h5>Benjamin Franklin S Method Of Habit Formation</h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
+                            facilisis.</p>
+                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="latest__blog__item">
+                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-2.jpg">
+                        <ul>
+                            <li>By Mattie Ramirez</li>
+                            <li>Dec 19, 2018</li>
+                            <li>Comment</li>
+                        </ul>
+                    </div>
+                    <div class="latest__blog__item__text">
+                        <h5>How To Set Intentions That Energize You</h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
+                            facilisis.</p>
+                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="latest__blog__item">
+                    <div class="latest__blog__item__pic set-bg" data-setbg="img/latest-blog/lb-3.jpg">
+                        <ul>
+                            <li>By Nicholas Brewer</li>
+                            <li>Dec 19, 2018</li>
+                            <li>Comment</li>
+                        </ul>
+                    </div>
+                    <div class="latest__blog__item__text">
+                        <h5>Burning Desire Golden Key Or Red Herring</h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                            ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel
+                            facilisis.</p>
+                        <a href="#">View More <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Latest Blog Section End -->
+
+<!-- Cta Begin -->
+<div class="cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="cta__item set-bg" data-setbg="img/cta/cta-1.jpg">
+                    <h4>Do You Want To Buy A Car</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="cta__item set-bg" data-setbg="img/cta/cta-2.jpg">
+                    <h4>Do You Want To Rent A Car</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cta End -->
+{% endblock %}

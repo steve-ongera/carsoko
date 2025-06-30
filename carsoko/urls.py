@@ -5,7 +5,7 @@ from django.urls import path, include  # or your own view imports
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('your_app.urls')),  # include your app routes here
+    path('', include('mywebsite.urls')),  # include your app routes here
 ]
 
 # Serve static and media files during development
