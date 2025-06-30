@@ -4,17 +4,30 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from PIL import Image
 import os
+from django.utils.text import slugify
 
 # Car Brand Model
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField( blank=True, null=True)  # NEW FIELD
     logo = models.ImageField(upload_to='brand_logos/', blank=True, null=True)
     country_of_origin = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.name
-    
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Brand.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['name']
 
@@ -123,6 +136,8 @@ class Car(models.Model):
     # Import Information (for foreign used cars)
     country_of_import = models.CharField(max_length=100, blank=True, null=True)
     import_duty_paid = models.BooleanField(default=False)
+
+    slug = models.SlugField( blank=True, null=True)  
     
     # Metadata
     is_featured = models.BooleanField(default=False)
@@ -132,11 +147,22 @@ class Car(models.Model):
     
     def __str__(self):
         return f"{self.year} {self.brand.name} {self.car_model.name}"
-    
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(f"{self.year}-{self.brand.name}-{self.car_model.name}")
+            slug = base_slug
+            counter = 1
+            while Car.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     def increment_views(self):
         self.views_count += 1
         self.save(update_fields=['views_count'])
-    
+
     class Meta:
         ordering = ['-created_at']
 
