@@ -44,8 +44,8 @@ class CarRentalInline(admin.StackedInline):
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
     list_display = [
-        'get_car_name', 'year', 'condition', 'price', 
-        'status', 'location', 'views_count', 'is_featured'
+        'car_image_thumbnail', 'get_car_name', 'year', 'condition', 'price', 
+        'status', 'location', 'views_count', 'is_featured', 'has_images'
     ]
     list_filter = [
         'condition', 'status', 'brand', 'fuel_type', 
@@ -89,6 +89,41 @@ class CarAdmin(admin.ModelAdmin):
         return f"{obj.year} {obj.brand.name} {obj.car_model.name}"
     get_car_name.short_description = 'Car'
     get_car_name.admin_order_field = 'brand__name'
+    
+    def car_image_thumbnail(self, obj):
+        """Display car thumbnail in admin list"""
+        if obj.images.exists():
+            # Get the primary image first, or fall back to the first image
+            primary_image = obj.images.filter(is_primary=True).first()
+            if not primary_image:
+                primary_image = obj.images.first()
+            
+            if primary_image and primary_image.image:
+                return format_html(
+                    '<img src="{}" style="width: 60px; height: 45px; object-fit: cover; border-radius: 4px;" />',
+                    primary_image.image.url
+                )
+        return format_html(
+            '<div style="width: 60px; height: 45px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 10px; color: #666;">No Image</div>'
+        )
+    car_image_thumbnail.short_description = 'Image'
+    car_image_thumbnail.allow_tags = True
+    
+    def has_images(self, obj):
+        """Show if car has images"""
+        count = obj.images.count()
+        if count > 0:
+            return format_html(
+                '<span style="color: green; font-weight: bold;">✓ {} image{}</span>',
+                count,
+                's' if count != 1 else ''
+            )
+        else:
+            return format_html(
+                '<span style="color: red; font-weight: bold;">✗ No images</span>'
+            )
+    has_images.short_description = 'Images Status'
+    has_images.allow_tags = True
 
 # Location Admin
 @admin.register(Location)
