@@ -27,21 +27,31 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-9">
-                <div class="car__details__pic">
-                    <div class="car__details__pic__large">
-                        {% with car.images.first as main_image %}
-                        <img class="car-big-img" src="{{ main_image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }}">
-                        {% endwith %}
-                    </div>
-                    <div class="car-thumbs">
-                        <div class="car-thumbs-track car__thumb__slider owl-carousel">
-                            {% for image in car.images.all %}
-                            <div class="ct" data-imgbigurl="{{ image.image.url }}">
-                                <img src="{{ image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }} image {{ forloop.counter }}">
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                <div class="car__details__pic">                     
+                    <div class="car__details__pic__large">                         
+                        {% if car.images.all %}
+                            {% with car.images.first as main_image %}
+                            <img class="car-big-img" src="{{ main_image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }}">
+                            {% endwith %}
+                        {% else %}
+                            <img class="car-big-img" src="{% static 'assets/img/nocar.jpg' %}" alt="{{ car.brand.name }} {{ car.car_model.name }}">
+                        {% endif %}
+                    </div>                     
+                    <div class="car-thumbs">                         
+                        <div class="car-thumbs-track car__thumb__slider owl-carousel">                             
+                            {% if car.images.all %}
+                                {% for image in car.images.all %}
+                                <div class="ct" data-imgbigurl="{{ image.image.url }}">                                 
+                                    <img src="{{ image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }} image {{ forloop.counter }}">                             
+                                </div>                             
+                                {% endfor %}
+                            {% else %}
+                                <div class="ct" data-imgbigurl="{% static 'assets/img/nocar.jpg' %}">                                 
+                                    <img src="{% static 'assets/img/nocar.jpg' %}" alt="{{ car.brand.name }} {{ car.car_model.name }} - No image available">                             
+                                </div>
+                            {% endif %}
+                        </div>                     
+                    </div>                 
                 </div>
                 <div class="car__details__tab">
                     <ul class="nav nav-tabs" role="tablist">

@@ -141,11 +141,15 @@
                                 <div class="car__item__pic__slider owl-carousel">
                                     {% if car.images.all %}
                                         {% for image in car.images.all %}
-                                            <img src="{{ image.image.url }}" alt="{{ car.brand }} {{ car.car_model }}" style="height: 250px; object-fit: cover; width: 100%;">
+                                            <a href="{% url 'car_detail' slug=car.slug %}" style="display: block;">
+                                                <img src="{{ image.image.url }}" alt="{{ car.brand }} {{ car.car_model }}" style="height: 250px; object-fit: cover; width: 100%;">
+                                            </a>
                                         {% endfor %}
                                     {% else %}
                                         <!-- Default image if no images available -->
-                                        <img src="{% static 'img/no-image-placeholder.jpg' %}" alt="No image available" style="height: 250px; object-fit: cover; width: 100%;">
+                                        <a href="{% url 'car_detail' slug=car.slug %}" style="display: block;">
+                                            <img src="{% static 'assets/img/nocar.jpg' %}" alt="No image available" style="height: 250px; object-fit: cover; width: 100%;">
+                                        </a>
                                     {% endif %}
                                 </div>
                                 <div class="car__item__text">
