@@ -1,3 +1,4 @@
+{% load static %}
 <!-- Header Section Begin -->
 <header class="header">
     <div class="header__top">
@@ -30,7 +31,7 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="header__logo">
-                    <a href="{% url 'homepage' %}"><img src="img/carsoko-logo.png" alt="CarSoko"></a>
+                    <a href="{% url 'homepage' %}"><img src="{% static 'assets/img/carsoko-logo.png'%}" alt="CarSoko"></a>
                 </div>
             </div>
             <div class="col-lg-10">

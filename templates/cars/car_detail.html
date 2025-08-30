@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- Breadcrumb End -->
-<div class="breadcrumb-option set-bg" data-setbg="{% static 'img/breadcrumb-bg.jpg' %}">
+<div class="breadcrumb-option set-bg" data-setbg="{% static 'assets/img/landing2-CjG21xax.png' %}">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -12,7 +12,7 @@
                     <h2>{{ car.brand.name }} {{ car.car_model.name }} {{ car.year }}</h2>
                     <div class="breadcrumb__links">
                         <a href="{% url 'homepage' %}"><i class="fa fa-home"></i> Home</a>
-                        <a href="#' %}">Car Listing</a>
+                        <a href="{% url 'car_list'%}">Car Listing</a>
                         <span>{{ car.brand.name }} {{ car.car_model.name|lower }}</span>
                     </div>
                 </div>
