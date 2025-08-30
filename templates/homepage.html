@@ -228,10 +228,11 @@
             </div>
         </div>
         <div class="row">
-            {% for car in homepage_cars %}
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="car__item" style="margin-bottom: 30px;">
-                    <div class="car__item__pic" style="position: relative; height: 200px; overflow: hidden;">
+        {% for car in homepage_cars %}
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="car__item" style="margin-bottom: 30px;">
+                <div class="car__item__pic" style="position: relative; height: 200px; overflow: hidden;">
+                    <a href="{% url 'car_detail' slug=car.slug %}" style="display: block; width: 100%; height: 100%;">
                         {% if car.images.all %}
                             {% with car.images.first as primary_image %}
                             <img src="{{ primary_image.image.url }}" alt="{{ car.brand.name }} {{ car.car_model.name }}" 
@@ -241,71 +242,72 @@
                             <img src="{% static 'img/car-placeholder.jpg' %}" alt="{{ car.brand.name }} {{ car.car_model.name }}" 
                                 style="width: 100%; height: 100%; object-fit: cover;">
                         {% endif %}
-                        
-                        <!-- Car Status Badge -->
-                        <div class="car-status-badge" style="position: absolute; top: 10px; left: 10px;">
-                            {% if car.rental_info %}
-                                <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
-                            {% else %}
-                                <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
-                            {% endif %}
-                        </div>
-                        
-                        {% if car.is_featured %}
-                            <div class="featured-badge" style="position: absolute; top: 10px; right: 10px; background: #ffc107; color: #000; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
-                                <span>Featured</span>
-                            </div>
+                    </a>
+                    
+                    <!-- Car Status Badge -->
+                    <div class="car-status-badge" style="position: absolute; top: 10px; left: 10px;">
+                        {% if car.rental_info %}
+                            <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
+                        {% else %}
+                            <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
                         {% endif %}
                     </div>
                     
-                    <div class="car__item__text" style="padding: 25px 20px 20px; background: #ffffff;">
-                        <div class="car__item__text__inner">
-                            <div class="label-date" style="font-size: 14px; color: #b7b7b7; margin-bottom: 5px;">{{ car.year }}</div>
-                            <h5 style="margin-bottom: 15px;">
-                                <a href="{% url 'car_detail' slug=car.slug %}" style="color: #111111; font-weight: 700; line-height: 28px;">
-                                    {{ car.brand.name }} {{ car.car_model.name }}
-                                </a>
-                            </h5>
-                            <ul style="border-bottom: 1px solid #e1e1e1; padding-bottom: 15px; margin-bottom: 15px;">
-                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7; margin-right: 15px;">
-                                    <span>{{ car.mileage|intcomma }}</span> km
-                                </li>
-                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7; margin-right: 15px;">
-                                    {{ car.get_transmission_display }}
-                                </li>
-                                <li style="display: inline-block; font-size: 14px; color: #b7b7b7;">
-                                    {{ car.get_fuel_type_display }}
-                                </li>
-                            </ul>
+                    {% if car.is_featured %}
+                        <div class="featured-badge" style="position: absolute; top: 10px; right: 10px; background: #ffc107; color: #000; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                            <span>Featured</span>
                         </div>
-                        <div class="car__item__price">
-                            {% if car.rental_info %}
-                                <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
-                                <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
-                                    KES {{ car.rental_info.daily_rate|floatformat:0|intcomma }}<span style="font-size: 14px; color: #b7b7b7;">/Day</span>
-                                </h6>
-                                {% if car.rental_info.weekly_rate %}
-                                    <small style="display: block; color: #666; font-size: 12px;">
-                                        Weekly: KES {{ car.rental_info.weekly_rate|floatformat:0|intcomma }}
-                                    </small>
-                                {% endif %}
-                            {% else %}
-                                <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
-                                <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
-                                    KES {{ car.price|floatformat:0|intcomma }}
-                                </h6>
-                                {% if car.negotiable %}
-                                    <small class="negotiable" style="display: block; color: #666; font-size: 12px;">
-                                        Negotiable
-                                    </small>
-                                {% endif %}
+                    {% endif %}
+                </div>
+                
+                <div class="car__item__text" style="padding: 25px 20px 20px; background: #ffffff;">
+                    <div class="car__item__text__inner">
+                        <div class="label-date" style="font-size: 14px; color: #b7b7b7; margin-bottom: 5px;">{{ car.year }}</div>
+                        <h5 style="margin-bottom: 15px;">
+                            <a href="{% url 'car_detail' slug=car.slug %}" style="color: #111111; font-weight: 700; line-height: 28px;">
+                                {{ car.brand.name }} {{ car.car_model.name }}
+                            </a>
+                        </h5>
+                        <ul style="border-bottom: 1px solid #e1e1e1; padding-bottom: 15px; margin-bottom: 15px; white-space: nowrap; overflow: hidden;">
+                            <li style="display: inline-block; color: #b7b7b7; margin-right: 15px; white-space: nowrap;">
+                                <span>{{ car.mileage|intcomma }}</span> km
+                            </li>
+                            <li style="display: inline-block; color: #b7b7b7; margin-right: 15px; white-space: nowrap;">
+                                {{ car.get_transmission_display }}
+                            </li>
+                            <li style="display: inline-block; color: #b7b7b7; white-space: nowrap;">
+                                {{ car.get_fuel_type_display }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="car__item__price">
+                        {% if car.rental_info %}
+                            <span class="car-option" style="font-size: 12px; color: #ffffff; background: #111111; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Rent</span>
+                            <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
+                                KES {{ car.rental_info.daily_rate|floatformat:0|intcomma }}<span style="font-size: 14px; color: #b7b7b7;">/Day</span>
+                            </h6>
+                            {% if car.rental_info.weekly_rate %}
+                                <small style="display: block; color: #666; font-size: 12px;">
+                                    Weekly: KES {{ car.rental_info.weekly_rate|floatformat:0|intcomma }}
+                                </small>
                             {% endif %}
-                        </div>
+                        {% else %}
+                            <span class="car-option sale" style="font-size: 12px; color: #ffffff; background: #e53637; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 15px; border-radius: 4px;">For Sale</span>
+                            <h6 style="font-size: 18px; color: #111111; font-weight: 700; margin-top: 10px;">
+                                KES {{ car.price|floatformat:0|intcomma }}
+                            </h6>
+                            {% if car.negotiable %}
+                                <small class="negotiable" style="display: block; color: #666; font-size: 12px;">
+                                    Negotiable
+                                </small>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
         
         <!-- View All Cars Button -->
         <div class="row">
