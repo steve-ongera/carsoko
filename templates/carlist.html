@@ -1,0 +1,263 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+    <!-- Breadcrumb Section Begin -->
+    <div class="breadcrumb-option set-bg" data-setbg="{% static 'img/breadcrumb-bg.jpg' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Car Listings</h2>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'homepage' %}"><i class="fa fa-home"></i> Home</a>
+                            <span>Car Listings</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Car Section Begin -->
+    <section class="car spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="car__sidebar">
+                        <div class="car__search">
+                            <h5>Car Search</h5>
+                            <form method="GET" action="{% url 'car_list' %}">
+                                <input type="text" name="q" placeholder="Search by make, model..." value="{{ request.GET.q }}">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                        <div class="car__filter">
+                            <h5>Car Filter</h5>
+                            <form method="GET" action="{% url 'car_list' %}">
+                                <select name="brand">
+                                    <option value="">All Brands</option>
+                                    {% for brand in brands %}
+                                    <option value="{{ brand.slug }}" {% if request.GET.brand == brand.slug %}selected{% endif %}>{{ brand.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <select name="model">
+                                    <option value="">All Models</option>
+                                    {% for model in models %}
+                                    <option value="{{ model.id }}" {% if request.GET.model == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <!-- Removed body_type filter since it's not being passed from the view -->
+                                
+                                <select name="condition">
+                                    <option value="">All Conditions</option>
+                                    {% for condition in conditions %}
+                                    <option value="{{ condition.0 }}" {% if request.GET.condition == condition.0 %}selected{% endif %}>{{ condition.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <select name="transmission">
+                                    <option value="">All Transmissions</option>
+                                    {% for transmission in transmissions %}
+                                    <option value="{{ transmission.0 }}" {% if request.GET.transmission == transmission.0 %}selected{% endif %}>{{ transmission.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <select name="fuel_type">
+                                    <option value="">All Fuel Types</option>
+                                    {% for fuel_type in fuel_types %}
+                                    <option value="{{ fuel_type.0 }}" {% if request.GET.fuel_type == fuel_type.0 %}selected{% endif %}>{{ fuel_type.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <div class="filter-price">
+                                    <p>Price Range:</p>
+                                    <div class="price-range-wrap">
+                                        <div class="filter-price-range"></div>
+                                        <div class="range-slider">
+                                            <div class="price-input">
+                                                <input type="text" id="minPrice" name="min_price" value="{{ request.GET.min_price }}" placeholder="Min">
+                                                <input type="text" id="maxPrice" name="max_price" value="{{ request.GET.max_price }}" placeholder="Max">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="car__filter__btn">
+                                    <button type="submit" class="site-btn">Apply Filters</button>
+                                    <a href="{% url 'car_list' %}" class="site-btn" style="background: #ddd; color: #333;">Reset Filters</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="car__filter__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="car__filter__option__item">
+                                    <h6>Show On Page</h6>
+                                    <select onchange="updatePageParam('per_page', this.value)">
+                                        <option value="9" {% if request.GET.per_page == "9" or not request.GET.per_page %}selected{% endif %}>9 Cars</option>
+                                        <option value="15" {% if request.GET.per_page == "15" %}selected{% endif %}>15 Cars</option>
+                                        <option value="30" {% if request.GET.per_page == "30" %}selected{% endif %}>30 Cars</option>
+                                        <option value="all" {% if request.GET.per_page == "all" %}selected{% endif %}>All Cars</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="car__filter__option__item car__filter__option__item--right">
+                                    <h6>Sort By</h6>
+                                    <select onchange="updatePageParam('sort', this.value)">
+                                        <option value="-created_at" {% if request.GET.sort == "-created_at" or not request.GET.sort %}selected{% endif %}>Newest First</option>
+                                        <option value="created_at" {% if request.GET.sort == "created_at" %}selected{% endif %}>Oldest First</option>
+                                        <option value="price" {% if request.GET.sort == "price" %}selected{% endif %}>Price: Low to High</option>
+                                        <option value="-price" {% if request.GET.sort == "-price" %}selected{% endif %}>Price: High to Low</option>
+                                        <option value="year" {% if request.GET.sort == "year" %}selected{% endif %}>Year: Old to New</option>
+                                        <option value="-year" {% if request.GET.sort == "-year" %}selected{% endif %}>Year: New to Old</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results count -->
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="mb-3">Showing {{ cars|length }} of {{ page_obj.paginator.count }} cars</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                    {% if cars %}
+                        {% for car in cars %}
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="car__item">
+                                <div class="car__item__pic__slider owl-carousel">
+                                    {% if car.images.all %}
+                                        {% for image in car.images.all %}
+                                            <img src="{{ image.image.url }}" alt="{{ car.brand }} {{ car.car_model }}" style="height: 250px; object-fit: cover; width: 100%;">
+                                        {% endfor %}
+                                    {% else %}
+                                        <!-- Default image if no images available -->
+                                        <img src="{% static 'img/no-image-placeholder.jpg' %}" alt="No image available" style="height: 250px; object-fit: cover; width: 100%;">
+                                    {% endif %}
+                                </div>
+                                <div class="car__item__text">
+                                    <div class="car__item__text__inner">
+                                        <div class="label-date">{{ car.year }}</div>
+                                        <h5><a href="{% url 'car_detail' car.slug %}">{{ car.brand.name }} {{ car.car_model.name }}</a></h5>
+                                        <ul>
+                                            <li><span>{{ car.mileage|intcomma }}</span> km</li>
+                                            <li>{{ car.get_transmission_display }}</li>
+                                            <li>{{ car.engine_size }}L</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car__item__price">
+                                        {% if car.rental_info %}
+                                            <span class="car-option">For Rent</span>
+                                            <h6>KES {{ car.rental_info.daily_rate|intcomma }}<span>/Day</span></h6>
+                                            {% if car.rental_info.weekly_rate %}
+                                                <h6>KES {{ car.rental_info.weekly_rate|intcomma }}<span>/Week</span></h6>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="car-option sale">For Sale</span>
+                                            <h6>KES {{ car.price|intcomma }}</h6>
+                                            {% if car.negotiable %}
+                                                <small>(Negotiable)</small>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <h4>No cars found</h4>
+                                <p>No cars found matching your criteria. Please try different filters or <a href="{% url 'car_list' %}">reset all filters</a>.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                    
+                    {% if is_paginated %}
+                    <div class="col-12">
+                        <div class="pagination__option text-center mt-4">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">First</a>
+                                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Previous</a>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <a href="#" class="active">{{ num }}</a>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <a href="?page={{ num }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ num }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Next</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Last</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Car Section End -->
+
+    <script>
+        // Function to update URL parameters
+        function updatePageParam(param, value) {
+            const url = new URL(window.location);
+            url.searchParams.set(param, value);
+            url.searchParams.delete('page'); // Reset to first page when changing filters
+            window.location.href = url.toString();
+        }
+        
+        // Price range slider initialization
+        $(document).ready(function() {
+            // Check if jQuery UI slider is available
+            if ($.fn.slider) {
+                $(".filter-price-range").slider({
+                    range: true,
+                    min: {{ min_price }},
+                    max: {{ max_price }},
+                    values: [{% if request.GET.min_price %}{{ request.GET.min_price }}{% else %}{{ min_price }}{% endif %}, 
+                             {% if request.GET.max_price %}{{ request.GET.max_price }}{% else %}{{ max_price }}{% endif %}],
+                    slide: function(event, ui) {
+                        $("#minPrice").val(ui.values[0]);
+                        $("#maxPrice").val(ui.values[1]);
+                    }
+                });
+                
+                $("#minPrice").val($(".filter-price-range").slider("values", 0));
+                $("#maxPrice").val($(".filter-price-range").slider("values", 1));
+            }
+            
+            // Initialize owl carousel for car images
+            if ($.fn.owlCarousel) {
+                $('.car__item__pic__slider').owlCarousel({
+                    items: 1,
+                    dots: false,
+                    nav: true,
+                    navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+                    autoplay: true,
+                    autoplayTimeout: 3000,
+                    loop: true
+                });
+            }
+        });
+    </script>
+
+{% endblock %}

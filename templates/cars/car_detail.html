@@ -11,7 +11,7 @@
                 <div class="breadcrumb__text">
                     <h2>{{ car.brand.name }} {{ car.car_model.name }} {{ car.year }}</h2>
                     <div class="breadcrumb__links">
-                        <a href="{% url 'cars:homepage' %}"><i class="fa fa-home"></i> Home</a>
+                        <a href="{% url 'homepage' %}"><i class="fa fa-home"></i> Home</a>
                         <a href="#' %}">Car Listing</a>
                         <span>{{ car.brand.name }} {{ car.car_model.name|lower }}</span>
                     </div>
@@ -199,7 +199,7 @@
                                 <li>Daily Rate <span>KES {{ car.rental_info.daily_rate|intcomma }}</span></li>
                                 <li>Weekly Rate <span>KES {{ car.rental_info.weekly_rate|intcomma }}</span></li>
                                 <li>Monthly Rate <span>KES {{ car.rental_info.monthly_rate|intcomma }}</span></li>
-                                <a href="{% url 'cars:rental_inquiry' car.slug %}" class="primary-btn"><i class="fa fa-calendar"></i> Book Now</a>
+                                <a href="#" class="primary-btn"><i class="fa fa-calendar"></i> Book Now</a>
                             {% else %}
                                 <li>Price <span>KES {{ car.price|intcomma }}</span></li>
                                 {% if car.discount_price %}

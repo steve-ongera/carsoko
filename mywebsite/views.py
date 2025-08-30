@@ -243,6 +243,129 @@ def get_models_by_brand(request):
     
     return JsonResponse({'models': models})
 
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.db.models import Min, Max
+from .models import Car, Brand, CarModel
+from django.contrib.humanize.templatetags.humanize import intcomma
+
+
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.db.models import Min, Max, Q
+from .models import Car, Brand, CarModel, BusinessConfig
+
+def car_list(request):
+    # Get all distinct values for filters
+    brands = Brand.objects.all().order_by('name')
+    models = CarModel.objects.all().order_by('name')
+    
+    # Get choices from Car model
+    conditions = Car._meta.get_field('condition').choices
+    transmissions = Car._meta.get_field('transmission').choices
+    fuel_types = Car._meta.get_field('fuel_type').choices
+    
+    # Get price range
+    price_range = Car.objects.aggregate(
+        min_price=Min('price'),
+        max_price=Max('price')
+    )
+    min_price = int(price_range['min_price'] or 0)
+    max_price = int(price_range['max_price'] or 10000000)
+    
+    # Start with all active cars - ADD PREFETCH_RELATED FOR IMAGES
+    cars = Car.objects.select_related(
+        'brand', 'car_model', 'location'
+    ).prefetch_related('images')  # This is the key addition!
+    
+    # Apply filters
+    brand_slug = request.GET.get('brand')
+    if brand_slug:
+        cars = cars.filter(brand__slug=brand_slug)
+        # Update models queryset to only show models for selected brand
+        models = models.filter(brand__slug=brand_slug)
+    
+    model_id = request.GET.get('model')
+    if model_id:
+        cars = cars.filter(car_model__id=model_id)
+    
+    body_type = request.GET.get('body_type')
+    if body_type:
+        cars = cars.filter(car_model__body_type=body_type)
+    
+    condition = request.GET.get('condition')
+    if condition:
+        cars = cars.filter(condition=condition)
+    
+    transmission = request.GET.get('transmission')
+    if transmission:
+        cars = cars.filter(transmission=transmission)
+    
+    fuel_type = request.GET.get('fuel_type')
+    if fuel_type:
+        cars = cars.filter(fuel_type=fuel_type)
+    
+    # Price filter
+    min_price_filter = request.GET.get('min_price')
+    max_price_filter = request.GET.get('max_price')
+    
+    if min_price_filter:
+        try:
+            cars = cars.filter(price__gte=float(min_price_filter))
+        except ValueError:
+            pass
+    
+    if max_price_filter:
+        try:
+            cars = cars.filter(price__lte=float(max_price_filter))
+        except ValueError:
+            pass
+    
+    # Search query - FIXED Q IMPORT
+    search_query = request.GET.get('q')
+    if search_query:
+        cars = cars.filter(
+            Q(brand__name__icontains=search_query) |
+            Q(car_model__name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # Sorting
+    sort = request.GET.get('sort', '-created_at')
+    valid_sorts = ['-created_at', 'created_at', 'price', '-price', 'year', '-year']
+    if sort in valid_sorts:
+        cars = cars.order_by(sort)
+    
+    # Pagination
+    per_page = request.GET.get('per_page', '9')
+    if per_page == 'all':
+        paginator = Paginator(cars, cars.count())
+    else:
+        try:
+            per_page = int(per_page)
+        except ValueError:
+            per_page = 9
+        paginator = Paginator(cars, per_page)
+    
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'cars': page_obj,
+        'brands': brands,
+        'models': models,
+        'conditions': conditions,
+        'transmissions': transmissions,
+        'fuel_types': fuel_types,
+        'min_price': min_price,
+        'max_price': max_price,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj,
+        'business_config': BusinessConfig.objects.first(),
+    }
+    
+    return render(request, 'carlist.html', context)
+
 from django.db.models import Prefetch
 def car_detail(request, slug):
     # Get the car with related data in a single query
